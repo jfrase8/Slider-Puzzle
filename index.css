@@ -1,0 +1,26 @@
+.body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.gameGrid {
+    margin: auto;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: row wrap;
+    border: 3px solid black;
+}
+.gameSquare {
+    text-align: center;
+    font-size: 50px;
+    border: 2px solid gray;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
