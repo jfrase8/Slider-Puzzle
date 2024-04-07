@@ -1,12 +1,14 @@
 .body {
     margin: 0;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative; /* Change to position relative */
 }
+
 .gameGrid {
-    margin: auto;
+    position: absolute; /* Change to position absolute */
+    top: 50%; /* Position at 50% from the top */
+    left: 50%; /* Position at 50% from the left */
+    transform: translate(-50%, -50%); /* Center the grid */
     width: 500px;
     height: 500px;
     display: flex;
@@ -15,12 +17,35 @@
     flex-flow: row wrap;
     border: 3px solid black;
 }
+
 .gameSquare {
+    position: absolute; /* Change to position absolute */
     text-align: center;
     font-size: 50px;
     border: 2px solid gray;
     box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    transition: left 1.0s, top 1.0s;
+    background-color: brown;
+    line-height: 150px;
+}
+.column1 {
+    left: 0;
+}
+.column2 {
+    left: 33.33%;
+}
+.column3 {
+    left: 66.66%;
+}
+.row1 {
+    top: 0;
+}
+.row2 {
+    top: 33.33%;
+}
+.row3 {
+    top: 66.66%;
+}
+.solveButton {
+    text-align: center;
 }
