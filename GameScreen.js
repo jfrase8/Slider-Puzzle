@@ -11,10 +11,17 @@ for (let i = 1; i < gridX*gridY; i++)
 }
 correctOrder.push("");
 
-console.log(correctOrder);
-// Create an array of numbers that will make a solvable puzzle
-const numberOrder = ["",2,7,4,1,3,5,6,8];
+// Column and row arrays for css
+let column1 = [0, 3, 6];
+let column2 = [1, 4, 7];
+let column3 = [2, 5, 8];
+let row1 = [0, 1, 2];
+let row2 = [3, 4, 5];
+let row3 = [6, 7, 8];
 
+// Create an array of numbers that will make a solvable puzzle
+let numberOrder = [];
+randomizePuzzle()
 
 // Get walls and corners of puzzle
 const walls = {"left":[], "top":[], "right":[], "bottom":[]};
@@ -39,46 +46,77 @@ for (let y = 0; y < gridY; y++)
         count++;
     }
 }
-console.log(walls);
-console.log(corners);
 
-let column1 = [0, 3, 6];
-let column2 = [1, 4, 7];
-let column3 = [2, 5, 8];
-let row1 = [0, 1, 2];
-let row2 = [3, 4, 5];
-let row3 = [6, 7, 8];
-
-// Create and add squares to the grid
-for (let i = 0; i < gridX*gridY; i++)
+// Randomizes the puzzle until a valid puzzle is created
+function randomizePuzzle()
 {
-    const gameSquare = document.createElement("div");
-    gameSquare.classList.add("gameSquare");
+    let validPuzzle = [];
 
-    if (numberOrder[i] == "")  gameSquare.style.backgroundColor = "whitesmoke";
-    if (column1.includes(i)) gameSquare.classList.add("column1");
-    else if (column2.includes(i)) gameSquare.classList.add("column2");
-    else gameSquare.classList.add("column3");
-    
-    if (row1.includes(i)) gameSquare.classList.add("row1");
-    else if (row2.includes(i)) gameSquare.classList.add("row2");
-    else gameSquare.classList.add("row3");
+    let isSolvable = false;
+    while (!isSolvable)
+    {
+        let numbers = [1,2,3,4,5,6,7,8,''];
+        let randomPuzzle = [];
 
-    console.log(gameSquare.className);
+        for (let i = 0; i < 9; i++)
+        {
+            // Pick random value in numbers and add it to the puzzle 
+            let randVal = numbers.splice(Math.floor(Math.random() * numbers.length), 1)[0];
+            randomPuzzle.push(randVal);
+        }
+        // Check that the random puzzle is solvable
+        let inversions = 0;
+        for (let i = 0; i < randomPuzzle.length - 1; i++) {
+            for (let j = i + 1; j < randomPuzzle.length; j++) {
+                if (randomPuzzle[i] && randomPuzzle[j] && randomPuzzle[i] > randomPuzzle[j]) {
+                    inversions++;
+                }
+            }
+        }
+        // If there are an even amount of numbers that come before and are larger than all the numbers in the array, it is solvable
+        if (inversions % 2 == 0)
+        {
+            isSolvable = true;
+            validPuzzle = randomPuzzle;
+            console.log(validPuzzle);
+        }
+    }
 
-    gameSquare.innerText = numberOrder[i];
-    gameSquare.style.width = `calc(100% / ${gridX})`;
-    gameSquare.style.height = `calc(100% / ${gridY})`;
-    gameSquare.style.order = i+1;
-    gameGrid.appendChild(gameSquare);
+    // Create squares on the grid
+    if (gameGrid.hasChildNodes())
+    {
+        // Remove all squares current squares
+        while (gameGrid.firstChild) gameGrid.removeChild(gameGrid.firstChild);
+    }
+    for (let i = 0; i < gridX*gridY; i++)
+    {
+        const gameSquare = document.createElement("div");
+        gameSquare.classList.add("gameSquare");
+
+        if (validPuzzle[i] == "")  gameSquare.style.backgroundColor = "whitesmoke";
+        if (column1.includes(i)) gameSquare.classList.add("column1");
+        else if (column2.includes(i)) gameSquare.classList.add("column2");
+        else gameSquare.classList.add("column3");
+        
+        if (row1.includes(i)) gameSquare.classList.add("row1");
+        else if (row2.includes(i)) gameSquare.classList.add("row2");
+        else gameSquare.classList.add("row3");
+
+        gameSquare.innerText = validPuzzle[i];
+        gameSquare.style.width = `calc(100% / ${gridX})`;
+        gameSquare.style.height = `calc(100% / ${gridY})`;
+        gameSquare.style.order = i+1;
+        gameGrid.appendChild(gameSquare);
+    }
+
+    numberOrder = validPuzzle;
 }
 
-// Algorithm for solving the puzzle
+
 function solvePuzzle()
 {
     let solution = BFSSlider(numberOrder, correctOrder);
     solution.push(correctOrder);
-    console.log(solution);
 
     // Move them
     for (let i = 1; i < solution.length; i++)
@@ -86,7 +124,6 @@ function solvePuzzle()
         setTimeout(() => {
             let swap = [];
             let orderedChildren = Array.from(gameGrid.children).sort((a,b) => parseInt(a.style.order) - parseInt(b.style.order));
-            console.log(orderedChildren);
             for (j = 0; j < solution[i].length; j++)
             {
                 let square = orderedChildren[j];
@@ -107,7 +144,7 @@ function solvePuzzle()
     }
 }
 
-
+// Finds the neighboring moves possible
 function findNeighbors(square, currentState) {
 
     // Check if this square is a neighbor or wall
@@ -161,6 +198,7 @@ function findNeighbors(square, currentState) {
     return moves
 }
 
+// Algorithm for solving the puzzle
 function BFSSlider(initialState, targetState) {
     const queue = [];
     const visited = new Set();
