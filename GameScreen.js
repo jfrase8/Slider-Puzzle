@@ -103,7 +103,7 @@ function solvePuzzle()
             swap[0].classList.value = swap[1].classList.value;
             swap[1].classList.value = temp;
 
-        }, i*1000);
+        }, i*500);
     }
 }
 

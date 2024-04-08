@@ -2,7 +2,7 @@ body {
     margin: 0;
     height: 100vh;
     position: relative; /* Change to position relative */
-    background-color: #FFC07F;
+    background-color: #a9b6f3;
 }
 
 .gameGrid {
@@ -26,7 +26,7 @@ body {
     font-size: 50px;
     border: 2px solid #521a1b;
     box-sizing: border-box;
-    transition: left 1.0s, top 1.0s;
+    transition: left 0.5s, top 0.5s;
     background-color: #F15156;
     line-height: 150px;
 }
